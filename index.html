@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 1: Sat-Vault</title>
+    <style>
+        body { background: #030712; color: #00ff66; font-family: 'Courier New', monospace; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #0b0f19; border: 1px solid #1e293b; padding: 30px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,255,102,0.15); }
+        h1, h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 2px; }
+        .btn { background: #00ff66; color: #030712; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; border-radius: 4px;}
+        .btn:hover { background: #38bdf8; }
+        .locked { color: #ef4444; border: 1px dashed #ef4444; padding: 15px; margin-top: 20px; }
+        .unlocked { color: #00ff66; border: 1px solid #00ff66; padding: 15px; margin-top: 20px; }
+        input[type="text"] { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; width: 60%; font-family: monospace; }
+        .alert { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 10px; margin-bottom: 15px; }
+        @keyframes orbit {
+            0% { transform: translate(-150px, -50px) rotate(0deg); }
+            50% { transform: translate(150px, 50px) rotate(180deg); }
+            100% { transform: translate(-150px, -50px) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛰️ PHASE 1: ORBITAL SAT-VAULT EMERGENCY</h1>
+    <div class="alert">
+        <strong>CRITICAL ALERT:</strong> Orbital decay detected on GEO-Sat 01. Trajectory vector has shifted by -14.8°. Collision risk imminent. Manual override and multi-agent flag verification required to re-align thrusters.
+    </div>
+    
+    <div style="background:#020617; height:200px; border:1px solid #334155; position:relative; overflow:hidden; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+        <div style="position:absolute; width: 800px; height: 800px; border: 1px dashed #334155; border-radius: 50%;"></div>
+        <div id="sat" style="position:absolute; font-size:24px; animation: orbit 4s linear infinite;">🛰️</div>
+        <div style="color: #ef4444; font-size: 12px; position:absolute; bottom:10px;">VECTOR DEVIATION: -14.8° [UNSTABLE]</div>
+    </div>
+
+    <h3>OPERATIVE OBJECTIVES (PHASE 1):</h3>
+    <ul>
+        <li><strong>[OS-02] Red Team:</strong> Inspect HTTP response headers or source code to find Flag 1.</li>
+        <li><strong>[AS-05] Automation:</strong> Query telemetry API endpoint <code>/api/sat/telemetry</code> to find Flag 2.</li>
+        <li><strong>[NF-04] Forensics:</strong> Inspect logs at <code>/logs/orbital_telemetry.log</code> to extract Flag 3.</li>
+    </ul>
+
+    <hr style="border-color:#1e293b;">
+    <h3>SUBMIT RECOVERY FLAGS TO RE-ALIGN SATELLITE:</h3>
+    <form id="satForm" onsubmit="event.preventDefault(); verifyFlag();">
+        <input type="text" id="flagInput" placeholder="Enter Flag (e.g., FLAG_SAT{...})">
+        <button class="btn" type="submit">Verify Flag</button>
+    </form>
+    
+    <p id="msgDisplay" style="margin-top:15px; font-weight:bold;"></p>
+
+    <div id="unlockedSection" class="unlocked" style="display:none;">
+        <h3>🎉 PHASE 1 COMPLETE: SATELLITE STABILIZED!</h3>
+        <p>Orbital vector successfully restored to nominal grid. Security clearance granted for Phase 2.</p>
+        <a href="bank.html" class="btn" style="background:#38bdf8;">Proceed to Phase 2: Nexus Trust Bank &rarr;</a>
+    </div>
+</div>
+<br>
+<!-- FLAG_SAT{ORBIT_DECAY_VECTOR_99} -->
+
+<script>
+    function checkStatus() {
+        if (localStorage.getItem("phase1_passed") === "true") {
+            document.getElementById("unlockedSection").style.display = "block";
+        }
+    }
+
+    function verifyFlag() {
+        const val = document.getElementById("flagInput").value.trim();
+        const validFlags = [
+            "FLAG_SAT{ORBIT_DECAY_VECTOR_99}",
+            "FLAG_SAT{THRUSTER_CALIBRATION_0x42}",
+            "FLAG_SAT{COMMAND_UPLINK_OVERRIDE}"
+        ];
+        const msg = document.getElementById("msgDisplay");
+        if (validFlags.includes(val)) {
+            localStorage.setItem("phase1_passed", "true");
+            msg.style.color = "#00ff66";
+            msg.innerText = "SUCCESS: Flag accepted! Trajectory vector updated.";
+            document.getElementById("unlockedSection").style.display = "block";
+        } else {
+            msg.style.color = "#ef4444";
+            msg.innerText = "ACCESS DENIED: Invalid orbital verification flag.";
+        }
+    }
+
+    checkStatus();
+</script>
+</body>
+</html>

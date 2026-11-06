@@ -1,0 +1,3 @@
+[INFO] 03:00:12 - Uplink active
+[WARN] 03:15:44 - Thruster pressure drop
+[SECRET] 03:20:00 - Flag: FLAG_SAT{COMMAND_UPLINK_OVERRIDE}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 3: SCADA Grid</title>
+    <style>
+        body { background: #030712; color: #00ff66; font-family: 'Courier New', monospace; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #0b0f19; border: 1px solid #1e293b; padding: 30px; border-radius: 8px; box-shadow: 0 0 25px rgba(0,255,102,0.15); }
+        h1, h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 2px; }
+        .btn { background: #00ff66; color: #030712; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; border-radius: 4px;}
+        .btn:hover { background: #38bdf8; }
+        .locked { color: #ef4444; border: 1px dashed #ef4444; padding: 15px; margin-top: 20px; }
+        .unlocked { color: #00ff66; border: 1px solid #00ff66; padding: 15px; margin-top: 20px; }
+        input[type="text"] { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; width: 60%; font-family: monospace; }
+        .alert { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 10px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div id="lockedView" class="container" style="text-align:center; display:none;">
+    <h1>🔒 ACCESS LOCKED</h1>
+    <p>You must neutralize Phase 2 (Bank Worm) before accessing Delta Pipeline SCADA.</p>
+    <a href="bank.html" class="btn">&larr; Return to Bank Portal</a>
+</div>
+
+<div id="mainView" class="container" style="display:none;">
+    <h1>🛢️ PHASE 3: DELTA PIPELINE SCADA GRID</h1>
+    <div class="alert">
+        <strong>CRITICAL INFRASTRUCTURE THREAT:</strong> Hackers have established a reverse shell tunnel into the main pressure valve controller. Overpressure warning: 1,850 PSI.
+    </div>
+    <p>Find the final bypass tunnel flag to shut down the unauthorized connection and save the pipeline.</p>
+    
+    <form id="scadaForm" onsubmit="event.preventDefault(); verifyScada();">
+        <input type="text" id="scadaFlagInput" placeholder="Enter SCADA Bypass Flag">
+        <button class="btn" type="submit">Terminate Tunnel</button>
+    </form>
+    
+    <p id="scadaMsg" style="font-weight:bold; margin-top:10px;"></p>
+
+    <div id="scadaUnlocked" class="unlocked" style="background:rgba(0,255,102,0.1); padding:20px; border:2px solid #00ff66; display:none;">
+        <h1>🏆 CAMPAIGN VICTORY: KYBERCORP NEXUS SECURED</h1>
+        <p>All three sectors (Satellite, Bank, SCADA) have been successfully defended by Kyberscorpion Labs operatives!</p>
+    </div>
+</div>
+<br>
+<!-- FLAG_SCADA{VALVE_BYPASS_TUNNEL_001} -->
+
+<script>
+    function init() {
+        if (localStorage.getItem("phase2_passed") !== "true") {
+            document.getElementById("lockedView").style.display = "block";
+        } else {
+            document.getElementById("mainView").style.display = "block";
+            if (localStorage.getItem("phase3_passed") === "true") {
+                document.getElementById("scadaUnlocked").style.display = "block";
+            }
+        }
+    }
+
+    function verifyScada() {
+        const val = document.getElementById("scadaFlagInput").value.trim();
+        const msg = document.getElementById("scadaMsg");
+        if (val === "FLAG_SCADA{VALVE_BYPASS_TUNNEL_001}") {
+            localStorage.setItem("phase3_passed", "true");
+            msg.style.color = "#00ff66";
+            msg.innerText = "SUCCESS: Reverse shell tunnel terminated. Pressure normalized.";
+            document.getElementById("scadaUnlocked").style.display = "block";
+        } else {
+            msg.style.color = "#ef4444";
+            msg.innerText = "ACCESS DENIED: Tunnel remains open.";
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
